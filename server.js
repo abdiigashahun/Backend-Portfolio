@@ -10,6 +10,11 @@ app.use(express.json());
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+// Add this here, early, before your routes
+app.use((req, res, next) => {
+  res.removeHeader("Content-Security-Policy");
+  next();
+});
 
 app.post('/api/sendMessage', async (req, res) => {
   const { name, email, message } = req.body;
@@ -53,4 +58,8 @@ app.post('/api/sendMessage', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
+app.get('/', (req, res) => {
+  res.send('Backend is working on Render!');
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
